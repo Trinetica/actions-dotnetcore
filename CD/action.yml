@@ -1,0 +1,30 @@
+inputs:
+  pubPath:
+    description: 'Directory for publish'
+    default: 'No pubPath provided'
+  site:
+    description: 'IIS site name'
+    default: 'No site provided'
+  configName:
+    description: 'Configuration name'
+    default: 'No configName provided'
+runs:
+  using: "composite"
+  steps:
+    # Local runner service account needs elevated to 'system'.
+    - name: Shutdown site
+      run: Stop-WebSite '${{ inputs.site }}'
+      shell: powershell
+
+    - name: Clean Pub Directory
+      run: Get-ChildItem '${{ inputs.pubPath }}' -Exclude appsettings.* | Remove-Item -Force -r
+      shell: powershell
+
+    - name: Publish
+      run: dotnet publish --configuration '${{ inputs.configName }}' -o '${{ inputs.pubPath }}'
+      shell: powershell
+
+    # Local runner service account needs elevated to 'system'.
+    - name: Startup site
+      run: Start-WebSite '${{ inputs.site }}'
+      shell: powershell

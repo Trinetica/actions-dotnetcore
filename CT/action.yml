@@ -1,0 +1,21 @@
+inputs:
+  branchOrTag:
+    filter: 'Tests filter'
+    default: 'No filter provided'
+  # testPath:
+  #   description: 'Path to test directory.'
+  #   default: 'No testPath provided'
+runs:
+  using: "composite"
+  steps:
+    # - name: Get Branch
+    #   uses: nelonoel/branch-name@v1
+
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal --filter ${{ inputs.filter }}
+      shell: powershell
+
+      # if: github.ref == 'refs/heads/master'
+      # if: CONTAINS(tag, "No tag provided")
+        # steps:
+        #  - run: echo "I only run if the branch has release in its name!"

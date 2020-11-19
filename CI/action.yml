@@ -1,0 +1,14 @@
+inputs:
+  configName:
+    description: 'Configuration name'
+    default: 'No configName provided'
+runs:
+  using: "composite"
+  steps:
+    - name: Install Dependencies
+      run: dotnet restore
+      shell: powershell
+
+    - name: Build
+      run: dotnet build --configuration '${{ inputs.configName }}' --no-restore
+      shell: powershell
