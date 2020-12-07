@@ -1,6 +1,6 @@
 inputs:
-  branchOrTag:
-    filter: 'Tests filter'
+  filter:
+    description: 'Tests filter'
     default: 'No filter provided'
   # testPath:
   #   description: 'Path to test directory.'
