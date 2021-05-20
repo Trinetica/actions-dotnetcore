@@ -1,16 +1,26 @@
 inputs:
   pubPath:
-    description: 'Directory for publish'
+    description: 'Directory for publish.'
     default: 'No pubPath provided'
   site:
-    description: 'IIS site name'
+    description: 'IIS site name.'
     default: 'No site provided'
   configName:
-    description: 'Configuration name'
+    description: 'Configuration name.'
     default: 'No configName provided'
+  archivePath:
+    description: 'Directory for archiving previous deploy.'
+    default: 'No archivePath provided'
+  assemblyFilePath:
+      description: 'The .DLL containing version info.'
+      default: 'No assemblyFilePath provided'
 runs:
   using: "composite"
   steps:
+    - name: Archive
+      run: $v = [Reflection.AssemblyName]::GetAssemblyName('${{ inputs.assemblyFilePath }}').Version; Compress-Archive -Path '${{ inputs.pubPath }}' -CompressionLevel "Fastest" -DestinationPath '${{ inputs.archivePath }}' -Update
+      shell: powershell
+
     # Local runner service account needs elevated to 'system'.
     - name: Shutdown site
       run: Stop-WebSite '${{ inputs.site }}'
